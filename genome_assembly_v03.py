@@ -28,18 +28,18 @@ def construct_graph(file_names, db_file, status_file, pattern=(1,1)):
                 if count%pattern[0] != pattern[1]:
                     continue
                 line = line.strip()
-                lines = (line[:-1], line[1:])
+                lines = [line[:-1], line[1:]]
                 if lines[0] in adjacency_graph:
                     if lines[1] not in adjacency_graph[lines[0]]:
                         adjacency_graph[lines[0]] += "," + lines[1]
-                        lines[1] = Suffix(false, 0, 0, adjacency_graph[lines[0]]
+                        lines[1] = Suffix(False, 0, 0, adjacency_graph[lines[0]])
                         redundancies += 1
                     else:
-                        suffix.count += 1 "that specific suffix is in the graph and is being hit by the search again"
+                        lines[1].count += 1 #"that specific suffix is in the graph and is being hit by the search again"
                 else:
                     uniques += 1
                     adjacency_graph[lines[0]] = lines[1]
-                    lines[1] = Suffix(false, 0, 0, adjacency_graph[lines[0]])
+                    lines[1] = Suffix(False, 0, 0, adjacency_graph[lines[0]])
     f = open(status_file, 'a')
     f.write("Initial De Bruijn database populated\n")
     f.write("# of instances of same prefix mapped to distinct suffixes: ")
