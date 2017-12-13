@@ -1,4 +1,20 @@
+"""
+TODO:
+    - Make proper De Bruijn graph
+    - Handle and prune bubbles
+    - Traverse and find possible contigs
+    - Compare to the N50 standard
+"""
+
 def string_from_paired_composition(k, d, paired_reads):
+    """Assembles paired reads into a single contig
+    
+    Parameters:
+        k (int): length of the kmers at either end of the pair
+        d (int): length of unknown DNA segment between paired reads
+        paired_reads (list of 2-string tuples): the paired reads
+        
+    """
     mapping = {}
     for p in paired_reads:
         for r in paired_reads:
@@ -20,13 +36,7 @@ def string_from_paired_composition(k, d, paired_reads):
     string = "_"*(2*k+d+len(paired_reads)-1)
     string = front + string[-1*(len(string)-k-len(paired_reads)+1-1):]
     string = string[:len(string)-k-len(paired_reads)+2] + back
+    if '_' in string:
+        raise ValueError("Contig was not assembled correctly. " +
+                "Unidentified base pairs exist.")
     return string
-
-with open('rosalind_ba3j.txt') as f:
-    lines = [line.strip() for line in f.readlines()]
-k, d = lines[0].split(' ')
-f = open('output.txt', 'w')
-tuples=[]
-for L in [x.split('|') for x in lines[1:]]:
-    tuples.append((L[0],L[1]))
-f.write(string_from_paired_composition(int(k), int(d), tuples))
